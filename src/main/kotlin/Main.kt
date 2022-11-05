@@ -2,6 +2,7 @@ import org.openqa.selenium.By.ByXPath
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
+import java.lang.Exception
 import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Path
@@ -31,7 +32,7 @@ fun init() {
     System.setProperty("webdriver.chrome.driver", folder.resolve("chromedriver").toString()) //change this accordingly to your browser and driver
     System.setProperty("webdriver.chrome.silentOutput", "true")
     options.setBinary("/bin/brave-browser") //Set this to the browser of your wishing.
-    options.setHeadless(true)
+    //options.setHeadless(true)
 
     //create directories and files
     if(Files.notExists(folder)) {
@@ -64,6 +65,13 @@ fun updateIp(userName: String, password: String) {
     driver.findElement(ByXPath("/html/body/div[1]/div[2]/div[2]/div[2]/div/div/div/div[1]/form/div[1]/div[2]/div/div[2]/div/input")).sendKeys(password)
     driver.findElement(ByXPath("/html/body/div[1]/div[2]/div[2]/div[2]/div/div/div/div[1]/form/div[4]/button")).click()
     Thread.sleep(3000)
+
+    try {
+        driver.findElement(ByXPath("/html/body/div[1]/div[2]/div[2]/div[2]/div/div/div/div[1]/form/div[4]/button"))
+        log.write("  Could not log in.\n")
+        driver.close()
+        return
+    } catch (_: Exception) { }
 
     for (id in Files.readAllLines(ids)) {
 
