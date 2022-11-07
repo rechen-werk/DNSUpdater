@@ -1,24 +1,25 @@
+package rechenwerk
+
 import org.openqa.selenium.By.ByXPath
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.chrome.ChromeDriver
-import org.openqa.selenium.chrome.ChromeOptions
+import org.openqa.selenium.firefox.FirefoxDriver
+import org.openqa.selenium.firefox.FirefoxOptions
 import java.lang.Exception
 import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 import java.util.Date
-
-private val options = ChromeOptions()
+private val options = FirefoxOptions()
 private val folder: Path = Path.of(System.getProperty("user.home"), ".rechenwerk", "world4you")
 private val ip: Path = folder.resolve("ip")
 private val ids: Path = folder.resolve("ids")
 private val log: Path = folder.resolve("log")
 
-fun Path.write(str: String) {
+private fun Path.write(str: String) {
     Files.writeString(this, str, StandardOpenOption.APPEND)
 }
-fun Path.overwrite(str: String) {
+private fun Path.overwrite(str: String) {
     Files.writeString(this, str, StandardOpenOption.APPEND)
 }
 
@@ -27,12 +28,10 @@ fun main(args: Array<String>) {
     updateIp(args[0], args[1])
 }
 
-fun init() {
+private fun init() {
     //initialize chromium
-    System.setProperty("webdriver.chrome.driver", folder.resolve("chromedriver").toString()) //change this accordingly to your browser and driver
-    System.setProperty("webdriver.chrome.silentOutput", "true")
-    options.setBinary("/bin/brave-browser") //Set this to the browser of your wishing.
-    //options.setHeadless(true)
+    System.setProperty("webdriver.gecko.driver", folder.resolve("geckodriver").toString())
+    options.setHeadless(true)
 
     //create directories and files
     if(Files.notExists(folder)) {
@@ -49,7 +48,7 @@ fun init() {
     }
 }
 
-fun updateIp(userName: String, password: String) {
+private fun updateIp(userName: String, password: String) {
     val currentIP = URL("https://checkip.amazonaws.com/").readText()
 
     if(Files.readString(ip) == currentIP) {
@@ -59,7 +58,7 @@ fun updateIp(userName: String, password: String) {
 
     // Login.
     log.write("\nInconsistent IP at: ${Date()}!\n")
-    val driver: WebDriver = ChromeDriver(options)
+    val driver: WebDriver = FirefoxDriver(options)
     driver.get("https://my.world4you.com/de")
     driver.findElement(ByXPath("/html/body/div[1]/div[2]/div[2]/div[2]/div/div/div/div[1]/form/div[1]/div[1]/div/div[2]/input")).sendKeys(userName)
     driver.findElement(ByXPath("/html/body/div[1]/div[2]/div[2]/div[2]/div/div/div/div[1]/form/div[1]/div[2]/div/div[2]/div/input")).sendKeys(password)
