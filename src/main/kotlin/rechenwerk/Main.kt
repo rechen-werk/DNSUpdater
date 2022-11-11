@@ -20,7 +20,7 @@ private fun Path.write(str: String) {
     Files.writeString(this, str, StandardOpenOption.APPEND)
 }
 private fun Path.overwrite(str: String) {
-    Files.writeString(this, str, StandardOpenOption.APPEND)
+    Files.writeString(this, str)
 }
 
 fun main(args: Array<String>) {
