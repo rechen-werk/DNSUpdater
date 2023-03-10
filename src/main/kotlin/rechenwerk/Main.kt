@@ -89,21 +89,23 @@ private fun updateIp(userName: String, password: String) {
                     else ""                   
                 }/td"))
 
-            val name = col[0]
-            val type = col[1]
-            val value = col[2]
+            val name = col[0].text
+            val type = col[1].text
+            val value = col[2].text
             val editButton = col[3].findElement(ByXPath("./div[1]/div[1]/a"))
 
-            if (type.text == "A") {
-                log.write("    ${name.text} is an A-entry with IP-Address: ${value.text}.\n")
+            if (type == "A") {
+                log.write("    $name is an A-entry with IP-Address: $value.\n")
                 editButton.click()
                 Thread.sleep(1000)
 
                 val entry = driver.findElement(ByXPath("/html/body/div[1]/div[4]/div[3]/div[3]/div/div[2]/div/div/div/div/form/div[3]/div[1]/div/div/input"))
                 entry.clear()
                 entry.sendKeys(currentIP)
+                driver.findElement(ByXPath("/html/body/div[1]/div[4]/div[3]/div[3]/div/div[2]/div/div/div/div/form/button[1]")).click()
+                Thread.sleep(1000)
             } else {
-                log.write("    ${name.text} is an not an A-entry. Skipping entry.\n")
+                log.write("    $name is an not an A-entry. Skipping entry.\n")
             }
         }
     }
